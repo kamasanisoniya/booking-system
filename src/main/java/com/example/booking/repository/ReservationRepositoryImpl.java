@@ -7,11 +7,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -50,8 +52,23 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
 
         cq.where(predicates.toArray(new Predicate[0]));
 
-        // sorting handled by pageable
+        // Apply sorting from pageable
+        List<Order> orders = new ArrayList<>();
+        Sort sort = pageable.getSort();
+        if (sort != null) {
+            sort.forEach(order -> {
+                String prop = order.getProperty();
+                if (order.isAscending()) {
+                    orders.add(cb.asc(root.get(prop)));
+                } else {
+                    orders.add(cb.desc(root.get(prop)));
+                }
+            });
+            if (!orders.isEmpty()) cq.orderBy(orders);
+        }
+
         TypedQuery<Reservation> query = em.createQuery(cq);
+        // total count
         int totalRows = query.getResultList().size();
 
         query.setFirstResult((int) pageable.getOffset());

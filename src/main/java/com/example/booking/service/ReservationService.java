@@ -10,6 +10,7 @@ import com.example.booking.repository.ResourceRepository;
 import com.example.booking.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +65,7 @@ public class ReservationService {
         Reservation r = reservationRepository.findById(id).orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
         User current = currentUserService.getCurrentUser();
         if (!current.getRole().equals(Role.ADMIN) && !r.getUser().getId().equals(current.getId())) {
-            throw new IllegalArgumentException("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         return toDto(r);
     }
@@ -74,7 +75,7 @@ public class ReservationService {
         Reservation r = reservationRepository.findById(id).orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
         User current = currentUserService.getCurrentUser();
         if (!current.getRole().equals(Role.ADMIN) && !r.getUser().getId().equals(current.getId())) {
-            throw new IllegalArgumentException("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         if (req.getStartTime() != null) r.setStartTime(req.getStartTime());
         if (req.getEndTime() != null) r.setEndTime(req.getEndTime());
@@ -92,7 +93,7 @@ public class ReservationService {
         Reservation r = reservationRepository.findById(id).orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
         User current = currentUserService.getCurrentUser();
         if (!current.getRole().equals(Role.ADMIN) && !r.getUser().getId().equals(current.getId())) {
-            throw new IllegalArgumentException("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         reservationRepository.deleteById(id);
     }
