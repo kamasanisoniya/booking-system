@@ -89,11 +89,11 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- H2 for tests -->
+    <!-- H2 for tests and local dev (runtime scope for dev) -->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <scope>test</scope>
+      <scope>runtime</scope>
     </dependency>
 
   </dependencies>
