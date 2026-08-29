@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
 
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationRepositoryCustom {
     Page<Reservation> findByUser(User user, Pageable pageable);
     Page<Reservation> findByStatus(ReservationStatus status, Pageable pageable);
     Page<Reservation> findByPriceBetween(BigDecimal min, BigDecimal max, Pageable pageable);
