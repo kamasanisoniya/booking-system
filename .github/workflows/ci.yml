@@ -30,4 +30,4 @@ jobs:
             ${{ runner.os }}-m2-
 
       - name: Build and run tests
-        run: mvn -B -DskipTests=false test package
+        run: mvn -B -DskipTests package
